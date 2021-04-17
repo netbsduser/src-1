@@ -539,18 +539,6 @@ filt_procattach(struct knote *kn)
 		return ESRCH;
 	}
 
-	/*
-	 * Fail if it's not owned by you, or the last exec gave us
-	 * setuid/setgid privs (unless you're root).
-	 */
-	mutex_enter(p->p_lock);
-	mutex_exit(&proc_lock);
-	if (kauth_authorize_process(curl->l_cred, KAUTH_PROCESS_KEVENT_FILTER,
-	    p, NULL, NULL, NULL) != 0) {
-	    	mutex_exit(p->p_lock);
-		return EACCES;
-	}
-
 	kn->kn_obj = p;
 	kn->kn_flags |= EV_CLEAR;	/* automatically set */
 
